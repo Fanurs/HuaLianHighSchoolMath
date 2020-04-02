@@ -1,2 +1,7 @@
-# HuaLianHighSchoolMath
-Remote teaching to support students during the quarantine period due to the 2020 pandemic.
+# 太平华联中学高中数学
+
+1. 在以上栏目中寻找“QnA”文件夹，然后点击进入，便可看到根据日期命名的ipynb档案。
+2. 点击进入任意一个ipynb档案，便可以看到问答集。
+3. 若数学符号显示不正确，或发现解答错误、错别字等，请到Google Classroom里评论。
+
+其它事项的讨论和提问，请使用Google Classroom。
