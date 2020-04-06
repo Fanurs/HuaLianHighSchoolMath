@@ -7,3 +7,5 @@
 *.log
 *.out
 *.synctex.gz
+*/main.pdf
+main.pdf
