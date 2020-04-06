@@ -1,0 +1,82 @@
+\documentclass[a4,12pt]{article}
+	\usepackage[UTF8]{ctex}
+	\usepackage{datetime2}% to use \DTMnow
+	\usepackage{indentfirst}
+		\setlength{\parskip}{5pt}% spacing between paragraphs
+		\setlength{\parindent}{20pt}% indentation
+	\usepackage{geometry}
+		\geometry{tmargin=8mm,bmargin=15mm,lmargin=8mm,rmargin=8mm}
+	\usepackage{enumitem}
+	\usepackage{amsmath}
+	\usepackage{amssymb}% use mathcal, etc.
+	\usepackage{mathtools}
+	\usepackage{physics}
+	\usepackage{tabu}
+	\usepackage{tikz}
+		\usetikzlibrary{arrows.meta,calc,decorations.markings,math,arrows.meta,patterns,angles,quotes,decorations.pathreplacing}
+
+% self-defined commands always begin with UPPERCASE LETTER
+	\newenvironment{LatinModern}{\fontfamily{lmr}\selectfont}{\par}% Latin Modern
+	\DeclareTextFontCommand{\textmyfont}{\LatinModern}
+	\newcommand{\Curs}[1]{\emph{\LatinModern{#1}}}
+	\newcounter{Problem}
+	\newcommand{\Problem}[1]{
+		\vspace*{10pt}
+		\stepcounter{Problem}
+		\label{Problem \arabic{Problem}}
+		\noindent\arabic{Problem}.\emph{~#1}
+	}
+	\newcommand{\Qed}{\hfill\ensuremath{\square}}
+
+% useful symbols
+	\def\Tick{\ding{51}}
+	\newcommand{\rectangle}{{
+		\ooalign{$\sqsubset\mkern3mu$\cr$\mkern3mu\sqsupset$\cr}
+	}}
+
+\begin{document}
+
+% Title
+	\title{
+		\vspace*{-50pt}
+		\Large{\textbf{太平华联中学高三数学题解}\vspace*{-10pt}}\\
+	}
+	\author{作者：郑其恩 Fanurs\vspace*{-30pt}}
+	\date{最后编译时间：\DTMnow （美东）}
+	\maketitle
+	\vspace*{-25pt}
+
+\setcounter{Problem}{0}
+\textbf{提问同学：某某某}\\
+\Problem{
+	求导$f(x)=x^x$。
+	}
+
+	此题是隐函数微分的经典应用。
+
+	首先设$y:=x^x$，然后我们对左右两式取自然对数，得
+	\[\ln{y} = x\ln{x}\]
+
+	记得我们的目标是求得$f'(x)$，即$\frac{dy}{dx}$。因此针对上式，左右两式求导，
+	\[\frac{d}{dx}\ln{y} = \frac{d}{dx}x\ln{x}\]
+
+	右式，利用导数的乘积法则可化为$(x\ln{x})' = x\cdot\frac{1}{x} + \ln{x}$。由于$f(x) = x^x$的定义域最多只能是$x\in\mathbb{R}^+$，即$x$不可为零或负数，因此右式最终可写成$1 + \ln{x}$。
+
+	左式，我们利用链导法则，
+	\[\frac{d}{dx}\ln{y} = \frac{dy}{dx}\left(\frac{d}{dy}\ln{y}\right) = y'\cdot\frac{1}{y}\]
+
+	由此，比较左右两式变可得
+	\[y' = y\left(1 + \ln{x}\right)\]
+
+	最后记得把$y$全部换掉，答案应写作
+	\[f'(x) = x^x \left(1 + \ln{x}\right)\]
+	\Qed
+	\vspace*{30pt}
+
+	\noindent 点评：
+	\begin{enumerate}[label=(\alph*)]
+		\item 作为练习，同学可尝试求导$f(x) = x^{x^x}$。
+	\end{enumerate}
+
+
+\end{document}
