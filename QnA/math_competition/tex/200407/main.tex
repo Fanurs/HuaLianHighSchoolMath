@@ -1,0 +1,309 @@
+\documentclass[a4,12pt]{article}
+	\usepackage[UTF8]{ctex}
+	\usepackage{datetime2}% to use \DTMnow
+	\usepackage{indentfirst}
+		\setlength{\parskip}{5pt}% spacing between paragraphs
+		\setlength{\parindent}{20pt}% indentation
+	\usepackage{geometry}
+		\geometry{tmargin=8mm,bmargin=15mm,lmargin=8mm,rmargin=8mm}
+	\usepackage{enumitem}
+	\usepackage{amsmath}
+	\usepackage{amssymb}% use mathcal, etc.
+	\usepackage{mathtools}
+	\usepackage{physics}
+	\usepackage{tabu}
+	\usepackage{tikz}
+		\usetikzlibrary{arrows.meta,calc,decorations.markings,math,arrows.meta,patterns,angles,quotes,decorations.pathreplacing}
+
+% self-defined commands always begin with UPPERCASE LETTER
+	\newenvironment{LatinModern}{\fontfamily{lmr}\selectfont}{\par}% Latin Modern
+	\DeclareTextFontCommand{\textmyfont}{\LatinModern}
+	\newcommand{\Curs}[1]{\emph{\LatinModern{#1}}}
+	\newcounter{Problem}
+	\newcommand{\Problem}[1]{
+		\vspace*{10pt}
+		\stepcounter{Problem}
+		\label{Problem \arabic{Problem}}
+		\noindent\arabic{Problem}.\emph{~#1}
+	}
+	\newcommand{\Qed}{\hfill\ensuremath{\square}}
+
+% useful symbols
+	\def\Tick{\ding{51}}
+	\newcommand{\rectangle}{{
+		\ooalign{$\sqsubset\mkern3mu$\cr$\mkern3mu\sqsupset$\cr}
+	}}
+
+\begin{document}
+
+% Title
+	\title{
+		\vspace*{-50pt}
+		\Large{\textbf{太平华联中学数学竞赛题解}\vspace*{-10pt}}\\
+	}
+	\author{作者：郑其恩 Fanurs\vspace*{-30pt}}
+	\date{最后编译时间：\DTMnow （美东）}
+	\maketitle
+	\vspace*{-25pt}
+
+\vspace*{10pt}\hrule\vspace*{10pt}
+\begin{center}\Large{\emph{今日内容：二元一次不定方程与辗转相除法}}\end{center}
+
+昨日的题解中，其中一题其实可以用“不定方程”的知识更轻松地解答，而不定方程也是竞赛中最热门的题型之一，所以今天作者将系统性地介绍不定方程的基本解题技巧。
+
+不定方程，又称为丢番图方程（Diophantine equation），是未知数$x$要求为整数（可正可负可零）的整数系数多项式等式。其一般表达式为
+\[ a_1x_1^{n_1} + a_2x_2^{n_2} + \cdots + a_kx_k^{n_k} = c \ \mbox{，} \]
+其中所有系数$a_1, a_2, \ldots, a_k$，所有幂$n_1, n_2, \ldots, n_k$以及$c$均为整数。如果能找到至少一组整数解，即存在着至少一组$r_1, r_2, \ldots, r_k\in\mathbb{Z}$，使得
+\[ a_1r_1^{n_1} + a_2r_2^{n_2} + \cdots + a_kr_k^{n_k} = c \ \mbox{，} \]
+我们便说此不定方程有解；反之，我们便说此不定方程无解。
+
+不定方程，时至今日，都是非常困难的问题。著名的“费马大定理”便是一种不定方程，该猜想（被证明之前被称为“费马猜想”）最先由法国数学皮埃尔·德·费马于1637年提出，却一直等到了358年后的1995年，才被英国数学家安德鲁·约翰·怀尔斯爵士成功证明。竞赛中出现的不定方程虽然比这简单得多，但也足以给很多参赛同学带来不小的挑战。
+
+\paragraph{二元一次不定方程}
+	中学竞赛中出现的不定方程，很多时候都只是一次不定方程，即所有幂为一的不定方程，其一般表达式为
+	\[ a_1x_1 + a_2x_2 + \cdots + a_kx_k = c \ \mbox{。} \]
+	而多元一次不定方程又是建立在二元一次不定方程，
+	\[ a_1x_1 + a_2x_2 = c \ \mbox{。} \]
+	当只有两个未知数，我们一般更倾向把它们写作$x$和$y$，对应的系数也习惯改成$a$和$b$。本文接下来所有的讨论都将依据以下二元一次不定方程的一般式：
+	\[ ax + by = c \ \mbox{。} \]
+
+\paragraph{一个可解的例子}
+	首先我们先来看一个具体的例子，
+	\[ 2x+3y=5 \ \mbox{。} \]
+	显然，大家都应能直接看出$(x, y) = (1, 1)$是此方程的一个解。但这解会是唯一的吗？如果不把这看作不定方程，即允许非整数解，显然我们知道存在着无限多个解。这是因为我们能任意选个$x$值，比如$x:=t\in\mathbb{R}$，那么$y$便直接等于
+	\[ y = \frac{5-2t}{3} \ \mbox{。} \]
+	比如，我们可以选$t:=2$，这样就有$(x, y) = (2, 1/3)$。然而，如果仅考虑整数解，$(2, 1/3)$便不能被接受了。倘若继续试错，数感强的读者或许能很快得到其它的整数解，比如$(x, y) = (-2, 3), (4, -1)$等等。但是这样猜出来的答案，当遇到数字大点的题目，会显得很无力。因此接下来，我们将学习不依赖数感和大量试错的方法。
+
+	首先，我们先假设$(x, y) = (1, 1)$是我们唯一猜得出来的解。接下来为了得到其它满足此方程的解，我们利用如下的技巧：
+	\[ \begin{aligned}
+			2x + 3y &= 5 \\
+			2x  +3y + (2\times3) - (2\times3) &= 5 \\
+			(2x + 2\times3) + (3y - 2\times3) &= 5 \\
+			2(x+3) + 3(y-2) &= 5 \\
+			2x_1 + 3y_1 &= 5 \ \mbox{。}
+		\end{aligned}
+	\]
+	由此可见，如果$(x, y)$是方程的解，那么$(x_1, y_1) = (x+3, y-2)$也会是方程的解，比如我们已经知道$(x,y)=(1,1)$是一个解，而这“新鲜出炉的发现”便告诉我们另一组解为
+	\[(x_1, y_1) = (1+3, 1-2) = (4, -1) \ \mbox{。} \]
+	我们可以很快地把$(x_1, y_1) = (4, -1)$代入回原方程，发现的确是个解。这个方法巧妙之处在于还能递归式使用，也就是如果把$(4, -1)$重新以$(x, y)$代入，那又能生成一组新的解，$(4+3, -1-2) = (7,-3)$。以此类推，我们可以很快得到
+	\[ (x, y) = (1,1), (4,-1), (7,-3), (10,-5), (13,-7), \ldots \ \mbox{。} \]
+	但这些就是方程的所有解了吗？还不是的。
+
+	上述所用到的“$+ (2\times3) - (2\times3)$”技巧，若添加个可调参数$t\in\mathbb{Z}$，并设$(x_0, y_0)$为不定方程的其中一组已知的解，则
+	\[ \begin{aligned}
+			2x_0 + 3y_0 &= 5 \\
+			2x_0 + 3y_0 + (2\times3)t - (2\times3)t &= 5 \\
+			(2x_0 + 2\times3t) + (3y_0 - 2\times3t) &= 5 \\
+			2(x_0+3t) + 3(y_0-2t) &= 5 \\
+			2x + 3y &= 5 \\
+		\end{aligned}
+	\]
+	因此$2x + 3y = 5$的所有解都可以写成
+	\[ \begin{dcases}
+			x = x_0 + 3t \\
+			y = y_0 - 2t
+		\end{dcases}
+	\]
+	的形式，其中$(x_0, y_0)$是方程已知的一个解，在这里我们取之为$(1, 1)$。作者也选了几个$t$值，把其对应的解整理成下表：
+	\begin{center}
+	\begin{tabular}{c|ccccccccc}
+		$t$ & $\cdots$ & $-3$ & $-2$ & $-1$ & $0$ & $1$ & $2$ & $3$ & $\cdots$ \\
+		\hline
+		$x$ & $\cdots$ & $-8$ & $-5$ & $-2$ & $1$ & $4$ & $7$ & $10$ & $\cdots$ \\
+		$y$ & $\cdots$ & $7$ & $5$ & $3$ & $1$ & $-2$ & $-4$ & $-6$ & $\cdots$ \\
+	\end{tabular}
+	\end{center}
+	这一次，我们把$2x+3y=5$所有可能的整数解都按规律列出来了——总共有无限多组整数解。
+
+\paragraph{一个不可解的例子}
+	不是每个二元一次不定方程都有解，比如
+	\[ 2x + 4y = 5 \]
+	就无解。不相信的话，可以多尝试几组$(x, y)$。此方程之所以无解是因为左式可写作$2(x + 2y)$，即$2$的倍数，而右式$5$却不是$2$的倍数，故此方程无整数解。
+
+\paragraph{一个会漏掉解的例子}
+	从以下的二元一次不定方程
+	\[ 2x + 4y = 6 \]
+	可看出$(x_0, y_0) = (1, 1)$是其中一个解。接下来我们根据之前讨论了的方法，试图找出所有其它的解，即我们利用
+	\[ \begin{dcases}
+			x = x_0 + 4t \\
+			y = y_0 - 2t
+		\end{dcases}
+	\]
+	生成以下一系列的解：
+	\begin{center}
+	\begin{tabular}{c|ccccccccc}
+		$t$ & $\cdots$ & $-3$ & $-2$ & $-1$ & $0$ & $1$ & $2$ & $3$ & $\cdots$ \\
+		\hline
+		$x$ & $\cdots$ & $-11$ & $-7$ & $-3$ & $1$ & $5$ & $9$ & $13$ & $\cdots$ \\
+		$y$ & $\cdots$ & $7$ & $5$ & $3$ & $1$ & $-1$ & $-3$ & $-5$ & $\cdots$ \\
+	\end{tabular}
+	\end{center}
+	但这一次的表格并不完整。比如我们可以找到一些漏掉的解，像是最明显的$(3, 0)$。之所以会出现“漏掉解”的情况是因为原方程左右两式有共同因数。解决方法很简单，就是要记得先尽可能把两式的共同因数抵消后，再使用上述规律求得剩余的所有解，即
+	\[ \begin{aligned}
+			2x + 4y &= 6 \\
+			x + 2y &= 3 \ \mbox{。}
+		\end{aligned}
+	\]
+	因此对于任意整数$t$，
+	\[ \begin{dcases}
+			x = x_0 + 4t \\
+			y = y_0 - 2t
+		\end{dcases}
+	\]
+	都会是原方程$2x + 4y = 6$的解。整理成表，则有
+	\begin{center}
+	\begin{tabular}{c|ccccccccc}
+		$t$ & $\cdots$ & $-3$ & $-2$ & $-1$ & $0$ & $1$ & $2$ & $3$ & $\cdots$ \\
+		\hline
+		$x$ & $\cdots$ & $-5$ & $-3$ & $-1$ & $1$ & $3$ & $5$ & $7$ & $\cdots$ \\
+		$y$ & $\cdots$ & $4$ & $3$ & $2$ & $1$ & $0$ & $-1$ & $-2$ & $\cdots$ \\
+	\end{tabular}
+	\end{center}
+
+\paragraph{二元一次不定方程的公式解}
+	现在我们将从前几页讨论的例子中总结归纳出个“公式”。
+
+	考虑以下不定方程
+	\[ ax + by = c \ \mbox{，} \]
+	其中$a, b, c\in\mathbb{Z}$，而未知数$x$和$y$必须是整数。当$c$为$a$和$b$的最大公因数（greatest common divisor），$\mathrm{gcd}(a, b)$，的倍数时，则不定方程有解。反之，即$\mathrm{gcd}(a, b)$无法整数$c$，则不定方程无解。
+
+	举几个例子。$21x+91y=64$无整数解，因为$\mathrm{gcd}(21, 91) = 7$，然而$7$无法整数$64$。$1001x - 132y= -198$有解，因为$\mathrm{gcd}(1001, -132) = 11$，而$-198$是$11$的倍数。如果$a$和$b$互质，即$\mathrm{gcd}(a, b) = 1$，比如$2x + 3y = c$，那么任意$c\in\mathbb{Z}$，此方程都会有解，因为任何整数$c$都是$\mathrm{gcd}(a, b) = 1$的倍数。
+
+	假设$ax + by = c$有解，并设之为$(x_0, y_0)$，则其它解能通过
+	\[ \begin{dcases}
+			x = x_0 + \frac{b}{\mathrm{gcd}(a, b)}\cdot t \\
+			y = y_0 - \frac{a}{\mathrm{gcd}(a, b)}\cdot t \\
+		\end{dcases}
+	\]
+	产生而得，其中$t$为任意整数，并且每一个$t$值都对应了一组不同的解。当然，如果事先把$ax + by = c$左右两式最大共同因数消掉，那这个“公式”就变成简洁的
+	\[ \begin{dcases}
+			x = x_0 + bt \\
+			y = y_0 - at \\
+		\end{dcases} \ \mbox{。}
+	\]
+	举个例子，$21x + 91y = -56$，应先化简为$3x + 13y = -8$，再使用以上的“公式”。
+
+	最后我们给这方法取个非正式名字，方便日后的讨论。由于上述结论的推导源自
+	\[ ax + by + (ab - ab)t = c \ \mbox{，} \]
+	作者一般管它叫“加$ab$减$ab$公式”。
+
+\paragraph{辗转相除法}
+	本文最后一个内容就是探讨如何有系统地找出第一组解$(x_0, y_0)$。细心的同学可能已经发现作者至今每每提及$(x_0, y_0)$都是用“猜”的。但这一招显然无法招架数字组合的万千变化。我们可以拿上一段最后一个例子，$3x + 13y = -8$，问读者能否快速看出解呢？如果能，那$376x - 157y = 101$呢？
+
+	在检查不定方程是有解之后，我们便演示如何通过辗转相除法为不定方程先求得一个解，之后再用之前的“公式”把其它解一并列出。以
+	\[ 3x + 13y = -8 \]
+	为例，在$\abs{a}=3$和$\abs{b}=13$当中选一个大的，然后以大的除以小的，并保留余数：
+	\[ 13 \divisionsymbol 3 = 4~\mbox{余}~1 \ \mbox{。} \]
+	另一个更适合的写法为，
+	\[ 13 = 4(3) + 1 \ \mbox{。} \]
+	这就是辗转相除法，它的运算止步于当余数为一，因为一旦有了如上的等式，我们便可以得到
+	\[ \begin{aligned}
+			13 - 4(3) &= 1 \\
+			3(-4) + 13 &= 1 \\
+			3[(-4)\times(-8)] + 13[1\times(-8)] &= -8 \\
+			3(32) + 13(-8) &= 8 \ \mbox{，}
+		\end{aligned}
+	\]
+	即$(x_0, y_0) = (32, -8)$是不定方程的其中一个解。
+
+	第一个例子让人有些意犹未尽，毕竟我们只看到了“相除”，少了“辗转”。所以我们再来看下第二个例子，
+	\[ 376x - 157y = 101 \ \mbox{。} \]
+	首先我们检查发现$376$和$157$互质，因此不定方程有无限个解，且我们不需要左右两式抵消共同因数。接下来我们使用辗转相除法：
+	\[ \begin{aligned}
+			376 &= 2(157) + 62 \\
+			157 &= 2(62) + 33 \\
+			62 &= 1(33) + 29 \\
+			33 &= 1(29) + 4 \\
+			29 &= 7(4) + 1 \ \mbox{。}
+		\end{aligned}
+	\]
+	当余数为一，我们便停止“辗转”。现在，我们从最后一行开始，把$1$表达为$376X-157Y$的形式：
+	\[ \begin{aligned}
+			1
+			&= 29 - 7(4) \\
+			&= 29 - 7(33 - 1(29)) \\
+			&= -7(33) + 8(29) \\
+			&= -7(33) + 8(62 - 1(33)) \\
+			&= -15(33) + 8(62) \\
+			&= -15(157 - 2(62)) + 8(62) \\
+			&= -15(157) + 38(62) \\
+			&= -15(157) + 38(376 - 2(157)) \\
+			&= -91(157) + 38(376) \\
+			\therefore 1 &= 376(38) - 157(91) \ \mbox{。}
+		\end{aligned}
+	\]
+	作者把这过程非正式地称为“辗转代入法”。其过程就是不断使用辗转相除法过程中的每一行，并逐步替换掉括号里数字，直到有了$1=376X-157Y$，我们变能算得原方程$376x - 157y = 101$的解：
+	\[ \begin{aligned}
+			376(38\times101) - 157(91\times101) &= 101 \\
+			376(3838) - 157(9191) &= 101 \ \mbox{。}
+		\end{aligned}
+	\]
+	因此，我们得到$(x_0, y_0) = (3838, 9191)$。剩下的解，则可通过“加$ab$减$ab$公式”一一求得。
+
+\paragraph{上回的题目}
+\emph{
+	小明身上没钱，便拿了一张有四位数金额的支票到银行兑现。糊涂的出纳员将金额的四位数$abcd$看成$cdab$，而给了小明这金额的钱。小明没数就将钱拿走，到超市拿出其中的$\mathrm{RM}50$买了$\mathrm{RM}50$的东西后，才发现剩下的钱刚好等于支票上数额的$3$倍。问小明支票上原来的金额的最后三位数是什么？
+	}
+
+	作者将用横杠来区分十进制表达式和数的乘积，即$abcd$是$a\cdot b\cdot c\cdot d$，而$\overline{abcd}$是个千位数为$a$的数字。根据小明的经历，我们便有
+	\[ \overline{cdab} - 50 = 3\cdot\overline{abcd} \ \mbox{。} \]
+	接着我们把十进制展开，
+	\[ \begin{aligned}
+			(10^3c + 10^2d + 10a + b) - 50 &= 3(10^3a + 10^2b + 10c + d) \\
+			2990a + 299b - 970c -97d &= -50 \ \mbox{。}
+		\end{aligned}
+	\]
+	这是一个四元一次不定方程。但我们可把它化成二元一次：
+	\[ \begin{aligned}
+			299(10a + b) - 97(10c + d) &= -50 \\
+			299x - 97y &= -50 \ \mbox{。}
+		\end{aligned}
+	\]
+	这里我们设$x:= 10a+b$和$y:= 10c+d$。由于$a, b, c, d$皆为$0, \ldots, 9$的个位数，因此$x$和$y$的取值范围是$10, \ldots, 99$。接下来，我们把刚才所学给用起来。
+
+	首先，$\mathrm{gcd}(299, 97) = 1$，因此$299x - 97y = -50$有整数解。接下来，我们利用辗转相除法：
+	\[ \begin{aligned}
+			299 &= 3(97) + 8 \\
+			97 &= 12(8) + 1 \ \mbox{。}
+		\end{aligned}
+	\]
+	再用“辗转代入法”，得
+	\[ \begin{aligned}
+			1
+			&= 97 - 12(8) \\
+			&= 97 - 12(299 - 3(97)) \\
+			&= 37(97) - 12(299) \ \mbox{。}
+		\end{aligned}
+	\]
+	因此，不定方程$299x - 97y = -50$的解可由
+	\[ \begin{aligned}
+			299(-12) - 97(-37) &= 1 \\
+			299[(-12)\times(-50)] - 97[(-37)\times(-50)] &= -50 \\
+			299(600) - 97(1850) &= -50
+		\end{aligned}
+	\]
+	得$(x_0, y_0) = (600, 1850)$。
+
+	然而并不是所有解都能满足题目，因为$x$和$y$的取值范围必须是$10, \ldots, 99$。为此我们从$(x_0, y_0) = (600, 1850)$开始生成更小的解。“加$ab$减$ab$公式”告诉我们其它解为
+	\[ \begin{dcases}
+			x = x_0 + (-97)t \\
+			y = y_0 - 299t
+		\end{dcases}
+		\Longrightarrow
+		\begin{dcases}
+			x = 600 - 97t \\
+			y = 1850 - 299t
+		\end{dcases} \ \mbox{。}
+	\]
+	而为了让$x$和$y$都介于$10, \ldots, 99$，不难发现$t=6$是唯一能满足此条件的整数参数。因此算得
+	\[ \begin{dcases}
+			x = 18 \\
+			y = 56
+		\end{dcases} \ \mbox{。}
+	\]
+	也就是说$\overline{abcd} = 1856$。我们可以做最后的验算：
+	\[ 3\times1856 = 5618 - 50 = 5568 \ \mbox{。} \]
+	故，小明支票上原来金额的最后三位数是$856$。
+	\Qed
+
+\end{document}
